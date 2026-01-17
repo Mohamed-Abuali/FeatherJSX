@@ -206,7 +206,7 @@ function effectHook(callback,dependencies){
     }else{
         hasChanged = true;
     }
-
+    //store the hook state data
     hookStates = {
         dependencies,
         hasChanged
