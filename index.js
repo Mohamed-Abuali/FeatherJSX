@@ -183,5 +183,12 @@ function renderApp(){
 }
 
 
+//useEffect Function :
+let hookStates = []
+let currentEffectHookIndex = 0
+let pendingEffects = []
+let cleanupEffects = []
+
+
 
 
