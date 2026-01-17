@@ -193,7 +193,14 @@ function effectHook(callback,dependencies){
     const effectHookookIndex = currentEffectHookIndex;
     currentEffectHookIndex++;
 
-    
+    const prevHook = hookStates[effectHookookIndex];
+
+    let hasChanged = true;
+    if(prevHook && prevHook.dependencies && dependencies){
+        hasChanged = hookStates.some((dep,i) => {
+            return Object.is(dep,prevHook.dependencies[i])
+        })
+    }
 }
 
 
