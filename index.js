@@ -200,6 +200,10 @@ function effectHook(callback,dependencies){
         hasChanged = hookStates.some((dep,i) => {
             return Object.is(dep,prevHook.dependencies[i])
         })
+    }else if(!prevHook){
+        hasChanged = true;
+    }else{
+        hasChanged = true;
     }
 }
 
