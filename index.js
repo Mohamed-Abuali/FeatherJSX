@@ -201,9 +201,15 @@ function effectHook(callback,dependencies){
             return Object.is(dep,prevHook.dependencies[i])
         })
     }else if(!prevHook){
+        //first render
         hasChanged = true;
     }else{
         hasChanged = true;
+    }
+
+    hookStates = {
+        dependencies,
+        hasChanged
     }
 }
 
