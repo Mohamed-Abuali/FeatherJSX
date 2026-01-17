@@ -189,6 +189,13 @@ let currentEffectHookIndex = 0
 let pendingEffects = []
 let cleanupEffects = []
 
+function effectHook(callback,dependencies){
+    const effectHookookIndex = currentEffectHookIndex;
+    currentEffectHookIndex++;
+
+    
+}
+
 
 
 
