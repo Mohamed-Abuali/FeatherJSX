@@ -69,6 +69,11 @@ This document chronicles the 13-week journey (update(Jun/10/2026)) of building a
 *   **Solution:** Implemented **Event Delegation** by attaching a single global listener to the `document`.
     *   **Logic:** Events "bubble up" from the target element. We store handlers on the DOM node (`_events` property) and use the global listener to find and execute the correct handler by walking up the DOM tree.
 
+### Effect System (`useEffect`-style)
+*   **Problem:** Needed a way to run side effects (logging, subscriptions, timers, etc.) after rendering, and to clean them up on re-renders.
+*   **Solution:** Added an effect system inspired by `useEffect` using internal arrays (`hookStates`, `pendingEffects`, and `cleanupEffects`).
+    *   **Logic:** During render, effect descriptors are queued with their dependencies; after commit, pending effects run, and any previous cleanup functions are executed before re-running changed effects.
+
 ---
 
 *This project has evolved from a simple DOM creator to a stateful, reactive renderer capable of handling functional components and hooks.*
