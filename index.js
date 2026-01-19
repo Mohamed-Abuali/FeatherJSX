@@ -250,6 +250,11 @@ export function commitEffect(){
     }
     }
 }
+export function useEffect(callback,dependencies){
+    effectHook(callback,dependencies);
+    renderEffect();
+    commitEffect()
+}
 
 
 
