@@ -207,10 +207,16 @@ function effectHook(callback,dependencies){
         hasChanged = true;
     }
     //store the hook state data
-    hookStates = {
+    hookStates[effectHookookIndex] = {
         dependencies,
         hasChanged
     }
+    pendingEffects.push({
+        callback,
+        effectHookookIndex,
+        dependencies
+    })
+    
 }
 
 
