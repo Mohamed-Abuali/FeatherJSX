@@ -225,7 +225,16 @@ export function renderEffect(){
         return () => console.log("cleanup")
     },[])
 }
-
+export function commitEffect(){
+    while(cleanupEffects.length){
+        const cleanup = cleanupEffects.pop()
+        try{
+            cleanup()
+        }catch(e){
+            console.log("Cleanup Error:",e)
+        }
+    }
+}
 
 
 
