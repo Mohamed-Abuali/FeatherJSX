@@ -216,8 +216,16 @@ function effectHook(callback,dependencies){
         effectHookookIndex,
         dependencies
     })
-    
+
 }
+export function renderEffect(){
+    currentEffectHookIndex = 0;
+    effectHook(() => {
+        console.log("Effect render")
+        return () => console.log("cleanup")
+    },[])
+}
+
 
 
 
