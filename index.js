@@ -226,6 +226,7 @@ export function renderEffect(){
     },[])
 }
 export function commitEffect(){
+    //run "Cleanup"
     while(cleanupEffects.length){
         const cleanup = cleanupEffects.pop()
         try{
@@ -233,6 +234,20 @@ export function commitEffect(){
         }catch(e){
             console.log("Cleanup Error:",e)
         }
+    }
+    //run new "Effect"
+    while(pendingEffects.length){
+        const {callback, hookIndex} = pendingEffects.pop()
+        try{
+            const cleanup = callback();
+        if(cleanup === "function"){
+            if(hookStates[hookIndex]){
+            hookStates[hookIndex].cleanup = cleanup
+            }
+        }
+    }catch(error){
+        console.log("Effect Error:",error)
+    }
     }
 }
 
