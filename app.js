@@ -6,34 +6,23 @@ import { helloWorld } from "./components/button.js";
 function handleClick() {
     alert("Clicked");
 }
-function Counter(){
+function Counter() {
     let [count, setCount] = useState(0)
-    return hs('div',{ class:"container"},
-            hs("div",
-        {
-            class: "header"
-        },
-        hs(
-            "h1",
-            null,
-            "Hello!"
+    return hs('div', { class: "container" },
+        hs("div", { class: "header" },
+            hs("h1", null, "FeatherJSX"),
+            hs('h3', null, "The lightweight renderer for the future."),
         ),
-        hs('h3', null, "Welcome to FeatherJSX"),
-        
-    ),
-    hs("div",
-        { class: "info-section" },
-        hs('div',
-            { class: "btn-wrapper" },
-            hs('button', { onClick: handleClick }, 'Click Me'),
-            helloWorld(),
+        hs("div", { class: "card" },
+            hs("div", { class: "counter-display" }, count),
+            hs('div', { class: 'btn-group' },
+                hs('button', { class: "btn secondary", onClick: () => setCount(count - 1) }, '-'),
+                hs('button', { class: "btn primary", onClick: () => setCount(count + 1) }, '+')
+            )
         ),
-    ),
-        hs('h1',null,"Counter App"),
-        hs("p",{class:"counter"},count),
-        hs('div',{class:'btn-wrapper'},
-            hs('button',{onClick: () => setCount(count ++)} , '+'),
-            hs('button',{onClick:() => setCount(count --)}, '-')
+        hs("div", { class: "footer" },
+            hs('p', null, "Built with vanilla JS & custom VDOM."),
+            hs('button', { class: "btn text", onClick: handleClick }, 'Documentation')
         )
     )
 }
