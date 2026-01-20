@@ -16,16 +16,16 @@ export function hs(nodeName, attributes, ...args) {
     return { nodeName, attributes, children };
 }
 
-document.addEventListener("click",(event) => {
-    const target = event.target;
-    while(target && target !== document){
-    if(target._events && target._events.click){
-        target._events.click(e)
-        return
+document.addEventListener("click", (event) => {
+    let target = event.target;
+    while (target && target !== document) {
+        if (target._events && target._events.click) {
+            target._events.click(event);
+            return;
+        }
+        target = target.parentNode;
     }
-}
-target = target.parentNode;
-})
+});
 
 export function render(vnode) {
     if(!vnode) return;

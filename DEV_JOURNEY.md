@@ -1,6 +1,6 @@
 # Development Journey: Building a Custom JSX Renderer
 
-This document chronicles the 13-week journey (update(Jun/10/2026)) of building a lightweight React-like JSX renderer from scratch. It highlights the key technical challenges faced and how they were overcome.
+This document chronicles the 13-week journey (update(19/JUN/2026)) of building a lightweight React-like JSX renderer from scratch. It highlights the key technical challenges faced and how they were overcome.
 
 ## Phase 1: Foundation & Setup (Weeks 1-4)
 
@@ -74,6 +74,10 @@ This document chronicles the 13-week journey (update(Jun/10/2026)) of building a
 *   **Solution:** Added an effect system inspired by `useEffect` using internal arrays (`hookStates`, `pendingEffects`, and `cleanupEffects`).
     *   **Logic:** During render, effect descriptors are queued with their dependencies; after commit, pending effects run, and any previous cleanup functions are executed before re-running changed effects.
 
----
+### The "UI Freeze" Bug (update(19/JUN/2026)) 
+*   **Problem:** The page became unresponsive/froze immediately after any user interaction (like clicking a button).
+*   **Solution:** Found an infinite loop in the event delegation logic.
+    *   **Cause:** The `while` loop `while(target && target !== document)` was missing the line to actually move up the tree (`target = target.parentNode`) *inside* the loop block. It was placed outside, creating an infinite loop checking the same element forever.
+    *   **Fix:** Moved `target = target.parentNode` inside the loop.
 
 *This project has evolved from a simple DOM creator to a stateful, reactive renderer capable of handling functional components and hooks.*
