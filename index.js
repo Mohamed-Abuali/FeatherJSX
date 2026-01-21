@@ -1,18 +1,18 @@
 
 /** @jsx hs */
 export function hs(nodeName, attributes, ...args) {
-    let children = args.length ? [].concat(...args) : null;
+    let children = args.length ? [].concat(...args) : [];
     if(typeof nodeName === 'function'){
         return nodeName(attributes,children)
     }
-    if(children){
-        children = children.map(child => {
-            if(typeof child === 'string' || typeof child === 'number'){
-                return {nodeName: '#text', value:String(child)}
-            }
-            return child
-        })
-    }
+    children = children.map(child => {
+        if(child === null || child === undefined) return null; // Handle explicit nulls
+        if(typeof child === 'string' || typeof child === 'number'){
+            return {nodeName: '#text', value:String(child)}
+        }
+        return child
+    }).filter(child => child !== null); // Remove nulls from the tree
+
     return { nodeName, attributes, children };
 }
 
@@ -89,16 +89,56 @@ function patch(parent, oldVNode, newVNode) {
         newVNode.$el = oldVNode.$el;
         return newVNode.$el
     }
+    
     const el = oldVNode.$el;
     newVNode.$el = el;
+    
+    // UPDATE ATTRIBUTES
+    const oldAttrs = oldVNode.attributes || {};
+    const newAttrs = newVNode.attributes || {};
+    
+    // Remove old attributes
+    Object.keys(oldAttrs).forEach(key => {
+        if (!(key in newAttrs)) {
+            if (key.startsWith('on')) {
+                // Event delegation handles this via _events, just clear it if needed
+                 const eventName = key.slice(2).toLowerCase();
+                 if(el._events) delete el._events[eventName];
+            } else if (key === 'style') {
+                el.style = '';
+            } else {
+                el.removeAttribute(key);
+            }
+        }
+    });
+    
+    // Set new attributes
+    Object.keys(newAttrs).forEach(key => {
+        if (oldAttrs[key] !== newAttrs[key]) {
+             if (key.startsWith('on')) {
+                 const eventName = key.slice(2).toLowerCase();
+                 el._events = el._events || {};
+                 el._events[eventName] = newAttrs[key];
+             } else if (key === 'style') {
+                 Object.assign(el.style, newAttrs[key]);
+             } else if (key === 'value' || key === 'checked') {
+                 el[key] = newAttrs[key];
+             } else {
+                 el.setAttribute(key, newAttrs[key]);
+             }
+        }
+    });
+
     patchChildren(el,oldVNode.children,newVNode.children);
 }
 
 
 
 
-export function patchChildren(parent,oldChildren = [],newChildren = []){
-    const len = Math.max(oldChildren.length,newChildren.length)
+export function patchChildren(parent, oldChildren, newChildren) {
+    oldChildren = oldChildren || [];
+    newChildren = newChildren || [];
+    const len = Math.max(oldChildren.length, newChildren.length)
     const oldKeysMap = {}
     oldChildren.forEach((child,index) => {
         const key = child.attributes && child.attributes.key;
