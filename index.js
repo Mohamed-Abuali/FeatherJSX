@@ -260,8 +260,8 @@ function renderApp(){
         node = hs(rootComponent,rootAttributes,...rootArgs)
     }
     patch(document.body, oldNode, node);
-    oldNode = node;
-    vdom.push(node);
+     oldNode = node;
+//     vdom.push(node);  
 }
 
 
