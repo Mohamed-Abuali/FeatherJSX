@@ -15,8 +15,8 @@ function Counter() {
         hs("div", { class: "card" },
             hs("div", { class: "counter-display" }, count),
             hs('div', { class: 'btn-group' },
-                hs('button', { class: "btn secondary", onClick: () => setCount(count--) }, '-'),
-                hs('button', { class: "btn primary", onClick: () => setCount(count++) }, '+')
+                hs('button', { class: "btn secondary", onClick: () => setCount(count - 1) }, '-'),
+                hs('button', { class: "btn primary", onClick: () => setCount(count + 1) }, '+')
             )
         ),
         hs("div", { class: "footer" },
