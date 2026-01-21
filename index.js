@@ -261,7 +261,6 @@ function renderApp(){
     }
     patch(document.body, oldNode, node);
      oldNode = node;
-
 }
 
 
