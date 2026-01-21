@@ -279,7 +279,7 @@ function effectHook(callback,dependencies){
 
     let hasChanged = true;
     if(prevHook && prevHook.dependencies && dependencies){
-        hasChanged = hookStates.some((dep,i) => {
+        hasChanged = dependencies.some((dep,i) => {
             return Object.is(dep,prevHook.dependencies[i])
         })
     }else if(!prevHook){
@@ -322,7 +322,7 @@ export function commitEffect(){
         const {callback, hookIndex} = pendingEffects.pop()
         try{
             const cleanup = callback();
-        if(cleanup === "function"){
+        if(typeof cleanup === "function"){
             if(hookStates[hookIndex]){
             hookStates[hookIndex].cleanup = cleanup
             }
