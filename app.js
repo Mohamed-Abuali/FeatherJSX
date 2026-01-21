@@ -10,7 +10,7 @@ function Counter() {
     let [count, setCount] = useState(0)
     return hs('div', { class: "container" },
         hs("div", { class: "header" },
-            hs("h1", null, "FeatherJSX"),
+          
             hs('h3', null, "The lightweight renderer for the future."),
         ),
         hs("div", { class: "card" },
