@@ -1,27 +1,50 @@
 
 /** @jsx hs */
+
+/**
+ * Hyperscript function (JSX Pragma)
+ * Converts JSX syntax into Virtual DOM (VNode) objects.
+ * 
+ * @param {string|function} nodeName - The tag name (e.g., 'div') or component function.
+ * @param {object} attributes - Props/attributes (e.g., { id: 'app', class: 'foo' }).
+ * @param {...any} args - Children elements.
+ * @returns {object} A VNode object representing the element.
+ */
 export function hs(nodeName, attributes, ...args) {
+    // Flatten children args into a single array
     let children = args.length ? [].concat(...args) : [];
+
+    // If nodeName is a function, it's a Functional Component.
+    // Call it with attributes (props) and children.
     if(typeof nodeName === 'function'){
         return nodeName(attributes,children)
     }
+
+    // Process children: filter nulls and convert strings/numbers to text nodes
     children = children.map(child => {
-        if(child === null || child === undefined) return null; // Handle explicit nulls
+        if(child === null || child === undefined) return null; // Drop invalid children
         if(typeof child === 'string' || typeof child === 'number'){
             return {nodeName: '#text', value:String(child)}
         }
         return child
     }).filter(child => child !== null); // Remove nulls from the tree
 
+    // Return the Virtual Node
     return { nodeName, attributes, children };
 }
 
+/**
+ * Global Event Delegation
+ * Listens for clicks on the document and propagates them to the correct handler.
+ * This avoids attaching event listeners to every single DOM node.
+ */
 document.addEventListener("click", (event) => {
     let target = event.target;
+    // Bubble up from the target to find an element with a click handler
     while (target && target !== document) {
         if (target._events && target._events.click) {
             target._events.click(event);
-            return;
+            return; // Stop propagation once handled
         }
         target = target.parentNode;
     }
@@ -65,43 +88,53 @@ export function render(vnode) {
 
 
 
+/**
+ * Patch Function (The Diffing Algorithm)
+ * Compares old VNode vs new VNode and updates the DOM efficiently.
+ * 
+ * @param {HTMLElement} parent - The parent DOM element.
+ * @param {object} oldVNode - The previous VNode.
+ * @param {object} newVNode - The new VNode.
+ */
 function patch(parent, oldVNode, newVNode) {
-    
+    // 1. Create: If no old node, just render the new one
     if(!oldVNode){
-        //if there's no old node then create a new one
         const newNode = render(newVNode)
         parent.appendChild(newNode);
         return newNode
     }
+    
+    // 2. Remove: If no new node, remove the old one
     if(!newVNode){
         const removeNode  = oldVNode.$el;
         parent.removeChild(removeNode)
         return null;
     }
    
+    // 3. Replace: If nodes are different types, replace entirely
     if (oldVNode.nodeName !==  newVNode.nodeName || (oldVNode.nodeName === "#text" && newVNode.value !== oldVNode.value)) {
-
         const $newNode = render(newVNode);
         parent.replaceChild($newNode,oldVNode.$el);
         return $newNode;
     }
+
+    // 4. Update: Nodes are same type. Update existing DOM.
     if(oldVNode.nodeName === '#text'){
         newVNode.$el = oldVNode.$el;
         return newVNode.$el
     }
     
     const el = oldVNode.$el;
-    newVNode.$el = el;
-    
-    // UPDATE ATTRIBUTES
+    newVNode.$el = el; // Transfer DOM reference
+
+    // Diff Attributes
     const oldAttrs = oldVNode.attributes || {};
     const newAttrs = newVNode.attributes || {};
     
-    // Remove old attributes
+    // Remove old attributes not in new
     Object.keys(oldAttrs).forEach(key => {
         if (!(key in newAttrs)) {
             if (key.startsWith('on')) {
-                // Event delegation handles this via _events, just clear it if needed
                  const eventName = key.slice(2).toLowerCase();
                  if(el._events) delete el._events[eventName];
             } else if (key === 'style') {
@@ -112,7 +145,7 @@ function patch(parent, oldVNode, newVNode) {
         }
     });
     
-    // Set new attributes
+    // Set/Update new attributes
     Object.keys(newAttrs).forEach(key => {
         if (oldAttrs[key] !== newAttrs[key]) {
              if (key.startsWith('on')) {
@@ -129,16 +162,26 @@ function patch(parent, oldVNode, newVNode) {
         }
     });
 
+    // 5. Recursively patch children
     patchChildren(el,oldVNode.children,newVNode.children);
 }
 
 
 
 
+/**
+ * Patch Children (List Reconciliation)
+ * Handles lists of children, supporting keyed updates for efficiency.
+ * 
+ * @param {HTMLElement} parent - The parent element.
+ * @param {Array} oldChildren - List of old VNodes.
+ * @param {Array} newChildren - List of new VNodes.
+ */
 export function patchChildren(parent, oldChildren, newChildren) {
     oldChildren = oldChildren || [];
     newChildren = newChildren || [];
-    const len = Math.max(oldChildren.length, newChildren.length)
+    // Keyed Reconciliation Strategy:
+    // 1. Map old keys to their VNodes for quick lookup.
     const oldKeysMap = {}
     oldChildren.forEach((child,index) => {
         const key = child.attributes && child.attributes.key;
@@ -146,26 +189,27 @@ export function patchChildren(parent, oldChildren, newChildren) {
             oldKeysMap[key] = {child,index}
         }
     })
+
+    // 2. Iterate through new children and try to match with old ones
     for(let i = 0 ;i<newChildren.length;i++){
         const newChild = newChildren[i]
         const newKey = newChild.attributes && newChild.attributes.key;
+        
+        // If matched by key, reuse the old node
         if(newKey !== undefined && oldKeysMap[newKey]){
-
             const {child: oldChild} = oldKeysMap[newKey]
             patch(parent,oldChild,newChild)
+            // Reorder DOM if necessary
             if(oldChild.$el !== parent.childNodes[i]){
                 parent.insertBefore(oldChild.$el , parent.childNodes[i])
             }
-
         }else{
+            // No key match, fall back to index-based patching
+            patch(parent, oldChildren[i], newChildren[i])
+        }
+    }
 
-            patch(
-                parent,
-                oldChildren[i],
-                newChildren[i]
-            )
-    }
-    }
+    // 3. Cleanup: Remove any extra old children
     if(oldChildren.length > newChildren.length){
         for(let i = newChildren.length; i < oldChildren.length;i++){
             if(oldChildren[i] && oldChildren[i].$el){
@@ -173,8 +217,6 @@ export function patchChildren(parent, oldChildren, newChildren) {
             }
         }
     }
-
-
 }
 
 let hooks = [];
