@@ -248,7 +248,7 @@ export function app(nodeName, attributes, ...args) {
     renderApp()
 }
 
-let vdom = [];
+
 let oldNode = undefined;
 
 function renderApp(){
@@ -261,7 +261,7 @@ function renderApp(){
     }
     patch(document.body, oldNode, node);
      oldNode = node;
-//     vdom.push(node);  
+
 }
 
 
