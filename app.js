@@ -1,6 +1,5 @@
 /** @jsx hs */
 import { app, hs , useState} from "./index.js";
-import { helloWorld } from "./components/button.js";
 
 
 function handleClick() {
