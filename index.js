@@ -279,7 +279,7 @@ function effectHook(callback,dependencies){
     let hasChanged = true;
     if(prevHook && prevHook.dependencies && dependencies){
         hasChanged = dependencies.some((dep,i) => {
-            return Object.is(dep,prevHook.dependencies[i])
+            return !Object.is(dep,prevHook.dependencies[i])
         })
     }else if(!prevHook){
         //first render
@@ -290,13 +290,15 @@ function effectHook(callback,dependencies){
     //store the hook state data
     hookStates[effectHookookIndex] = {
         dependencies,
-        hasChanged
+        cleanup:prevHook?.cleanup
     }
+    if(hasChanged){
     pendingEffects.push({
         callback,
         effectHookookIndex,
         dependencies
     })
+}
 
 }
 export function renderEffect(){
@@ -318,12 +320,12 @@ export function commitEffect(){
     }
     //run new "Effect"
     while(pendingEffects.length){
-        const {callback, hookIndex} = pendingEffects.pop()
+        const {callback, effectHookookIndex} = pendingEffects.pop()
         try{
             const cleanup = callback();
         if(typeof cleanup === "function"){
-            if(hookStates[hookIndex]){
-            hookStates[hookIndex].cleanup = cleanup
+            if(hookStates[effectHookookIndex]){
+            hookStates[effectHookookIndex].cleanup = cleanup
             }
         }
     }catch(error){
@@ -331,10 +333,17 @@ export function commitEffect(){
     }
     }
 }
+let effectQueue = []
 export function useEffect(callback,dependencies){
     effectHook(callback,dependencies);
-    renderEffect();
-    commitEffect()
+    if(effectQueue.length === 0){
+        queueMicrotask(() => {
+        renderEffect();
+        commitEffect()
+        effectQueue = []
+        })
+    }
+
 }
 
 
