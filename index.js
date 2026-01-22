@@ -102,8 +102,9 @@ function patch(parent, oldVNode, newVNode,index = null) {
         const newNode = render(newVNode)
         if(index != null  && parent.childNodes[index]){
             parent.insertBefore(newNode,parent.childNodes[i])
+        }else{
+            parent.appendChild(newNode);
         }
-        parent.appendChild(newNode);
         return newNode
     }
     
