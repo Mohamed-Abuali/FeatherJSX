@@ -62,7 +62,7 @@ export function render(vnode) {
 
     let a = vnode.attributes || {};
     // Object.keys(a).forEach( k => n.setAttribute(k, a[k]));
-    console.log(a)
+    //console.log(a)
     // adding an eventlistener "onClick" like React
     Object.keys(a).forEach((k) => {
         if (k.startsWith("on") && typeof a[k] === "function") {
@@ -194,22 +194,26 @@ export function patchChildren(parent, oldChildren, newChildren) {
             oldKeysMap[key] = {child,index}
         }
     })
-
+ 
     // 2. Iterate through new children and try to match with old ones
     for(let i = 0 ;i<newChildren.length;i++){
         const newChild = newChildren[i]
         const newKey = newChild.attributes && newChild.attributes.key;
-        
+       console.log(oldKeysMap)
         // If matched by key, reuse the old node
         if(newKey !== undefined && oldKeysMap[newKey]){
             const {child: oldChild} = oldKeysMap[newKey]
-            patch(parent,oldChild,newChild)
+           if(oldChild === newChild){
+            patch(parent,oldChild,newChild,i)
             // Reorder DOM if necessary
             if(oldChild.$el !== parent.childNodes[i]){
                 parent.insertBefore(oldChild.$el , parent.childNodes[i])
+                  //console.log(oldChildren[i],newChildren[i])
             }
+        }
         }else{
             // No key match, fall back to index-based patching
+           // console.log(oldChildren[i],newChildren[i])
             patch(parent, oldChildren[i], newChildren[i],i)
         }
     }
