@@ -190,27 +190,29 @@ export function patchChildren(parent, oldChildren, newChildren) {
     const oldKeysMap = {}
     oldChildren.forEach((child,index) => {
         const key = child.attributes && child.attributes.key;
-        if(key !== undefined) {
+        if(key !== undefined && key !== null) {
             oldKeysMap[key] = {child,index}
         }
     })
- 
+    
     // 2. Iterate through new children and try to match with old ones
     for(let i = 0 ;i<newChildren.length;i++){
         const newChild = newChildren[i]
         const newKey = newChild.attributes && newChild.attributes.key;
        console.log(oldKeysMap)
+ 
         // If matched by key, reuse the old node
-        if(newKey !== undefined && oldKeysMap[newKey]){
+        if(newKey !== undefined && oldKeysMap[newKey] && newKey !== null ){
             const {child: oldChild} = oldKeysMap[newKey]
-           if(oldChild == newChild){
+           
             patch(parent,oldChild,newChild,i)
             // Reorder DOM if necessary
+        
             if(oldChild.$el !== parent.childNodes[i]){
-                parent.insertBefore(oldChild.$el , parent.childNodes[i])
+                parent.insertBefore(oldChild.$el , parent.childNodes[i] || null)
                   //console.log(oldChildren[i],newChildren[i])
             }
-        }
+        
         }else{
             // No key match, fall back to index-based patching
            // console.log(oldChildren[i],newChildren[i])
