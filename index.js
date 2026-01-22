@@ -71,8 +71,9 @@ export function render(vnode) {
             n._events = n._events || {};
             n._events[eventName] =  a[k];
             
-        }else if(k.startsWith("st") ){
+        }else if(k.startsWith("style") ){
             const style = a[k]
+            console.log("style:",style)
             Object.assign(n.style,style)
         }else {
             n.setAttribute(k, a[k]);
