@@ -82,8 +82,8 @@ This document chronicles the 13-week journey (update(19/JUN/2026)) of building a
 
 ### The "Duplicate Elements on Update" Bug(update(22/JUN/2026)) 
 *   **Problem:** Clicking the `+` or `-` buttons caused a *new* component (header, etc.) to be appended to the DOM every time, instead of updating the existing text. The list of elements just kept growing.
-*   **Solution (Found by Developer):** Manually debugged the keyed reconciliation logic and identified that the check for reusing nodes was insufficient.
+*   **Solution :** Manually debugged the keyed reconciliation logic and identified that the check for reusing nodes was insufficient.
     *   **Fix:** Added an explicit check `if(oldChild === newChild)` inside the `patchChildren` function. This ensured that if the VNode reference hadn't changed, the existing DOM node was reused and patched correctly, preventing unnecessary appends.
-    *   **Note:** This fix was implemented entirely by the developer without AI assistance, demonstrating a deep understanding of object referential equality in the VDOM reconciliation process.
+
 
 *This project has evolved from a simple DOM creator to a stateful, reactive renderer capable of handling functional components and hooks.*
