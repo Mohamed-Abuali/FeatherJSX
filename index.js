@@ -203,7 +203,7 @@ export function patchChildren(parent, oldChildren, newChildren) {
         // If matched by key, reuse the old node
         if(newKey !== undefined && oldKeysMap[newKey]){
             const {child: oldChild} = oldKeysMap[newKey]
-           if(oldChild === newChild){
+           if(oldChild == newChild){
             patch(parent,oldChild,newChild,i)
             // Reorder DOM if necessary
             if(oldChild.$el !== parent.childNodes[i]){
