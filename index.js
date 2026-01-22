@@ -231,6 +231,7 @@ export function useState(initialValue){
         renderApp()
     }
     hookIndex++;
+    
     return [hooks[currentHookIndex],setState]
 
 }
