@@ -204,7 +204,6 @@ export function patchChildren(parent, oldChildren, newChildren) {
     for(let i = 0 ;i<newChildren.length;i++){
         const newChild = newChildren[i]
         const newKey = newChild.attributes && newChild.attributes.key;
-       console.log(oldKeysMap)
  
         // If matched by key, reuse the old node
         if(isValidKey(newKey) && oldKeysMap[newKey]){
