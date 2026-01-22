@@ -171,7 +171,12 @@ function patch(parent, oldVNode, newVNode,index = null) {
     patchChildren(el,oldVNode.children,newVNode.children);
 }
 
-
+function isValidKey(key){
+    return key != undefined &&
+    key != null &&
+    key != '' && 
+    key != false;
+}
 
 
 /**
@@ -190,7 +195,7 @@ export function patchChildren(parent, oldChildren, newChildren) {
     const oldKeysMap = {}
     oldChildren.forEach((child,index) => {
         const key = child.attributes && child.attributes.key;
-        if(key !== undefined && key !== null) {
+        if(isValidKey(key)) {
             oldKeysMap[key] = {child,index}
         }
     })
@@ -202,7 +207,7 @@ export function patchChildren(parent, oldChildren, newChildren) {
        console.log(oldKeysMap)
  
         // If matched by key, reuse the old node
-        if(newKey !== undefined && oldKeysMap[newKey] && newKey !== null ){
+        if(isValidKey(newKey) && oldKeysMap[newKey]){
             const {child: oldChild} = oldKeysMap[newKey]
            
             patch(parent,oldChild,newChild,i)
