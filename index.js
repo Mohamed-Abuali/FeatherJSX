@@ -172,10 +172,10 @@ function patch(parent, oldVNode, newVNode,index = null) {
 }
 
 function isValidKey(key){
-    return key != undefined &&
-    key != null &&
-    key != '' && 
-    key != false;
+    return key !== undefined &&
+    key !== null &&
+    key !== '' && 
+    key !== false;
 }
 
 
