@@ -124,6 +124,7 @@ function patch(parent, oldVNode, newVNode,index = null) {
 
     // 4. Update: Nodes are same type. Update existing DOM.
     if(oldVNode.nodeName === '#text'){
+        oldVNode.$el.nodeValue = newVNode.value;
         newVNode.$el = oldVNode.$el;
         return newVNode.$el
     }
@@ -209,7 +210,7 @@ export function patchChildren(parent, oldChildren, newChildren) {
             }
         }else{
             // No key match, fall back to index-based patching
-            patch(parent, oldChildren[i], newChildren[i])
+            patch(parent, oldChildren[i], newChildren[i],i)
         }
     }
 
