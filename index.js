@@ -96,10 +96,13 @@ export function render(vnode) {
  * @param {object} oldVNode - The previous VNode.
  * @param {object} newVNode - The new VNode.
  */
-function patch(parent, oldVNode, newVNode) {
+function patch(parent, oldVNode, newVNode,index = null) {
     // 1. Create: If no old node, just render the new one
     if(!oldVNode){
         const newNode = render(newVNode)
+        if(index != null  && parent.childNodes[index]){
+            parent.insertBefore(newNode,parent.childNodes[i])
+        }
         parent.appendChild(newNode);
         return newNode
     }
