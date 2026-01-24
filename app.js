@@ -3,7 +3,7 @@ import { app, hs , useState} from "./index.js";
 
 
 function handleClick() {
-    alert("Clicked");
+    alert("You Clicked");
 }
 function Counter() {
     let [count, setCount] = useState(0)
