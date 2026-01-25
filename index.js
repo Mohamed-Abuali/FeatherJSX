@@ -80,7 +80,6 @@ export function render(vnode) {
             
         }else if(k.startsWith("style") ){
             const style = a[k]
-            console.log("style:",style)
             Object.assign(node.style,style)
         }else {
             node.setAttribute(k, a[k]);
