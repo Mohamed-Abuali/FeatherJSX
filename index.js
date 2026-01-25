@@ -57,13 +57,14 @@ export function render(vnode) {
         vnode.$el = n;
         return n;
     }
+    let node;
     console.log(vnode,vnode.nodeName)
     if(vnode.nodeName.startsWith("svg")){
-        
+        node = document.createElementNS(vnode.node)
     }else{
-    let n = document.createElement(vnode.nodeName);
+    node= document.createElement(vnode.nodeName);
     }
-    vnode.$el = n;
+    vnode.$el = node;
 
     let a = vnode.attributes || {};
     // Object.keys(a).forEach( k => n.setAttribute(k, a[k]));
