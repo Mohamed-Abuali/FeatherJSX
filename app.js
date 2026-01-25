@@ -102,13 +102,18 @@ function Counter() {
             textDecoration: "underline"
         }
     };
+    
 
     return hs('div', { style: styles.container },
         hs("div", { style: styles.header },
+            hs("img", { 
+                src: "./public/Walking_angel_with_palm_branch_1769243315.svg", 
+                style: { width: "100px", height: "auto", marginBottom: "1rem" } 
+            }),
             hs("h1", { style: styles.h1 }, "FeatherJSX"),
             hs('h3', { style: styles.h3 }, "The lightweight renderer for the future."),
         ),
-        hs("svg",{src:"http://www.w3.org/2000/svg"},''),
+        hs("svg",{src:"./public/Walking_angel_with_palm_branch_1769243315.svg"}),
         hs("div", { style: styles.card },
             hs("div", { style: styles.counterDisplay }, count),
             hs('div', { style: styles.btnGroup },

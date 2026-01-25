@@ -3,7 +3,7 @@
 This document tracks the planned features and improvements for the FeatherJSX renderer.
 
 ## 🏗️ Core Renderer Improvements
-- [ ] **SVG Support**
+- [*] **SVG Support**
     - *Goal:* Render `<svg>`, `<path>`, `<circle>`, etc.
     - *Task:* Update `render` function to use `document.createElementNS` when the tag is an SVG element.
 - [ ] **Fragments (`<>...</>`)**
