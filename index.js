@@ -89,7 +89,7 @@ export function render(vnode) {
 
     (vnode.children || []).forEach(c => n.appendChild(render(c)));
 
-    return n;
+    return node;
 }
 
 
