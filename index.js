@@ -57,7 +57,12 @@ export function render(vnode) {
         vnode.$el = n;
         return n;
     }
+    console.log(vnode,vnode.nodeName)
+    if(vnode.nodeName.startsWith("svg")){
+        
+    }else{
     let n = document.createElement(vnode.nodeName);
+    }
     vnode.$el = n;
 
     let a = vnode.attributes || {};
