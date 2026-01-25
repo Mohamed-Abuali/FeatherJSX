@@ -74,15 +74,15 @@ export function render(vnode) {
         if (k.startsWith("on") && typeof a[k] === "function") {
             // It's an event handler like onClick
             const eventName = k.slice(2).toLowerCase();
-            n._events = n._events || {};
-            n._events[eventName] =  a[k];
+            node._events = node._events || {};
+            node._events[eventName] =  a[k];
             
         }else if(k.startsWith("style") ){
             const style = a[k]
             console.log("style:",style)
-            Object.assign(n.style,style)
+            Object.assign(node.style,style)
         }else {
-            n.setAttribute(k, a[k]);
+            node.setAttribute(k, a[k]);
         }
     });
 
