@@ -60,7 +60,7 @@ export function render(vnode) {
     let node;
     console.log(vnode,vnode.nodeName)
     if(vnode.nodeName.startsWith("svg")){
-        node = document.createElementNS(vnode.node)
+        node = document.createElementNS(vnode.src,vnode.node)
     }else{
     node= document.createElement(vnode.nodeName);
     }
