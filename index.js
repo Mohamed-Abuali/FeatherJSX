@@ -87,7 +87,7 @@ export function render(vnode) {
     });
 
 
-    (vnode.children || []).forEach(c => n.appendChild(render(c)));
+    (vnode.children || []).forEach(c => node.appendChild(render(c)));
 
     return node;
 }
