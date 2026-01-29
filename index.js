@@ -51,44 +51,48 @@ document.addEventListener("click", (event) => {
 });
 
 export function render(vnode) {
-    if(!vnode) return;
-    if (vnode.nodeName === '#text') {
-        let  n =  document.createTextNode(vnode.value);
-        vnode.$el = n;
-        return n;
-    }
-    let node;
-  
-    if(vnode.nodeName.startsWith("svg")){
-        console.log(vnode.attributes.src,vnode.nodeName)
-        node = document.createElementNS(vnode.attributes.src,vnode.nodeName)
-    }else{
-    node= document.createElement(vnode.nodeName);
-    }
-    vnode.$el = node;
-
-    let a = vnode.attributes || {};
-
-    // adding an eventlistener "onClick" like React
-    Object.keys(a).forEach((k) => {
-        if (k.startsWith("on") && typeof a[k] === "function") {
-            // It's an event handler like onClick
-            const eventName = k.slice(2).toLowerCase();
-            node._events = node._events || {};
-            node._events[eventName] =  a[k];
-            
-        }else if(k.startsWith("style") ){
-            const style = a[k]
-            Object.assign(node.style,style)
-        }else {
-            node.setAttribute(k, a[k]);
+    try{ 
+        if(!vnode) return;
+        if (vnode.nodeName === '#text') {
+            let  n =  document.createTextNode(vnode.value);
+            vnode.$el = n;
+            return n;
         }
-    });
+        let node;
+    
+        if(vnode.nodeName.startsWith("svg")){
+            console.log(vnode.attributes.src,vnode.nodeName)
+            node = document.createElementNS(vnode.attributes.src,vnode.nodeName)
+        }else{
+        node= document.createElement(vnode.nodeName);
+        }
+        vnode.$el = node;
+
+        let a = vnode.attributes || {};
+
+        // adding an eventlistener "onClick" like React
+        Object.keys(a).forEach((k) => {
+            if (k.startsWith("on") && typeof a[k] === "function") {
+                // It's an event handler like onClick
+                const eventName = k.slice(2).toLowerCase();
+                node._events = node._events || {};
+                node._events[eventName] =  a[k];
+                
+            }else if(k.startsWith("style") ){
+                const style = a[k]
+                Object.assign(node.style,style)
+            }else {
+                node.setAttribute(k, a[k]);
+            }
+        });
 
 
-    (vnode.children || []).forEach(c => node.appendChild(render(c)));
+        (vnode.children || []).forEach(c => node.appendChild(render(c)));
 
-    return node;
+        return node;
+    }catch(error){
+        console.error(`ErrorMessage: ${error}`);
+    }
 }
 
 
