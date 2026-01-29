@@ -33,7 +33,7 @@ This document tracks the planned features and improvements for the FeatherJSX re
     - *Task:* Create `Router`, `Route`, and `Link` components that listen to `window.history` or hash changes.
 
 ## 🛠️ Developer Experience & Utils
-- [ ] **Error Boundaries**
+- [Done] **Error Boundaries**
     - *Goal:* Prevent the entire app from crashing if one component fails.
     - *Task:* Wrap `render` calls in `try/catch` blocks and display a fallback UI on error.
 - [ ] **Controlled Inputs**
