@@ -68,8 +68,7 @@ export function render(vnode) {
     vnode.$el = node;
 
     let a = vnode.attributes || {};
-    // Object.keys(a).forEach( k => n.setAttribute(k, a[k]));
-    //console.log(a)
+
     // adding an eventlistener "onClick" like React
     Object.keys(a).forEach((k) => {
         if (k.startsWith("on") && typeof a[k] === "function") {
