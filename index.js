@@ -261,6 +261,41 @@ export function useState(initialValue){
 
 }
 
+/**
+ * Custom hook that emulates React's `useReducer` hook, using `useState` internally.
+ * It provides a stable dispatch function across re-renders.
+ *
+ * @param {function} reducer - A function with the signature `(state, action) => newState`.
+ * @param {any} initialState - The initial value for the state.
+ * @param {function} [init] - An optional function to compute the initial state lazily.
+ * @returns {[any, function]} An array containing the current state and a dispatch function.
+ */
+export function useMyReducer(reducer, initialState, init) {
+    const stateHookIndex = hookIndex;
+    const [state, setState] = useState(init ? init(initialState) : initialState);
+
+    // Manually memoize the dispatch function in its own hook slot to ensure it's stable.
+    // This avoids re-creating the dispatch function on every render.
+    const dispatchHookIndex = hookIndex;
+
+    if (hooks[dispatchHookIndex] === undefined) {
+        hooks[dispatchHookIndex] = (action) => {
+            // To prevent stale state, we read the latest state directly 
+            // from our hooks array inside the dispatch function.
+            const currentState = hooks[stateHookIndex];
+            const newState = reducer(currentState, action);
+            setState(newState);
+        };
+    }
+    
+    // Consume a hook slot for our memoized dispatch.
+    hookIndex++;
+    
+    const dispatch = hooks[dispatchHookIndex];
+
+    return [state, dispatch];
+}
+
 let rootComponent = null;
 let rootAttributes = null;
 let rootArgs = null;
